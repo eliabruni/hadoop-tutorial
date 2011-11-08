@@ -1,28 +1,39 @@
 #!/usr/bin/env python
 
+from operator import itemgetter
 import sys
 
-word2count = {}
+current_word = None
+current_count = 0
+word = None
 
 for line in sys.stdin:
-    # remove whitespaces (leading and trailing)
+    # remove leading and trailing whitespace
     line = line.strip()
 
     # parse the mapper input
     word, count = line.split('\t', 1)
 
-    # convert count from string to int
+    # convert count (currently a string) to int
     try:
         count = int(count)
-	word2count[word] = word2count.get(word, 0) + count
     except ValueError:
         # count wasn't a numbe, so we 
 	# (silently) discard the line
-        pass
+        continue
 
-# sort the words lexigraphically 
-sorted_word2count = word2count.items()
-sorted_word2count.sort()
+    # this IF-switch only works because Hadoop sorts map output
+    # by key (here: word) before it is passed to the reducer
+    if current_word == word:
+        current_count += count
+    else:
+        if current_word:
+	    # write result to STDOUT
+	    print '%s\t%s' % (current_word, current_count)
+	current_count = count
+	current_word = word
 
-for word, count in sorted_word2count:
-    print '%s\t%s' % (word, count)
+# do not forget to output the last word if needed!
+if current_word == word:
+    print '%s\t%s' % (current_word, current_count)
+

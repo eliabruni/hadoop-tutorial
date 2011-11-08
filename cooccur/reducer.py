@@ -1,27 +1,39 @@
 #!/usr/bin/env python
 
-import sys
 from operator import itemgetter
+import sys
 
-cooccurs = {}
+current_pair = None
+current_count = 0
+pair = None
 
 for line in sys.stdin:
+    # remove leading and trailing whitespace
     line = line.strip()
-    word1, word2, count = line.split('\t')
+
+    # parse the mapper input
+    pair, count = line.split('\t')
+
+     # convert count (currently a string) to int
     try:
         count = int(count)
-	if word1 in cooccurs:
-	    cooccurs[word1][word2] =   cooccurs[word1].get(word2, 0) + count
-	else:
-	    cooccurs[word1] = {word2: 1}
     except ValueError:
-        pass
+        # count was not a number, so silently
+	# ignore/discard this line
+	continue
+    
+    # this IF-switch only works because Hadoop sorts map output
+    # by key (here: pair) before it is passed to the reducer
+    if current_pair == pair:
+        current_count += count
+    else:
+        if current_pair:
+	    # write result to STDOUT
+	    print '%s\t%s' % (current_pair, current_count)
+	current_count = count
+	current_pair = pair
 
-
-sorted_keys = cooccurs.keys()
-sorted_keys.sort()
-
-for word1 in sorted_keys:
-    for word2, count in sorted(cooccurs[word1].iteritems(),  key=itemgetter(1), reverse=True):
-       print '%s\t%s\t%s' % (word1, word2, count)
+# do not forget to output the last word if needed!
+if current_pair == pair:
+    print '%s\t%s' % (current_pair, current_count)
 
