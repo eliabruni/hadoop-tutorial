@@ -18,9 +18,8 @@ for line in sys.stdin:
 	        continue
 	    if j >= len(words):
 	        break
-	    tpair = sorted((word, words[j]))
-	    pair = tpair[0] + '\t' + tpair[1]
-	    print '%s\t%s' % (pair, 1)
+	    pair = sorted((word, words[j]))
+	    print '%s\t%s\t%s' % (pair[0], pair[1], 1)
 	    j += 1
 	i += 1    
         
