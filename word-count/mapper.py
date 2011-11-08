@@ -5,7 +5,7 @@ for line in sys.stdin:
     # remove non alpha-numeric
     line = re.sub("[^a-zA-Z0-9]", " ", line)
 
-    # remove leading and trailing whitespace
+    # remove leading and trailing whitespaces
     line = line.strip()
 
     # split the line into words
