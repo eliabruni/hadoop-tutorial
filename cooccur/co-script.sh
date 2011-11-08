@@ -26,7 +26,5 @@ diff  out/mobydick_cooccur.txt out/mobydick_cooccur_local.txt
 
 # cleanup
 hadoop fs -rmr cooccur_example
-cd ..
-rm -r cooccur_example
 
 

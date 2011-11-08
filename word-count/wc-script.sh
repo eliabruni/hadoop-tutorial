@@ -1,12 +1,11 @@
-# make a new directory
-mkdir count_example
-cd count_example
-
 # get the files
 git clone https://github.com/eliabruni/hadoop-tutorial
 
+cd word-count
+mkdir out
+
 # run it locally
-cat mobydick.txt | ./mapper.py | ./reducer.py | sort -k 2 -r -n | head
+cat mobydick.txt | ./mapper.py | ./reducer.py | sort -nrk 2 > out/mobydick_count_local.txt
 
 # put the data in hdfs
 hadoop fs -mkdir count_example
@@ -22,12 +21,9 @@ hadoop fs -cat count_example/hamlet_out/part-* | sort -nrk 2 > out/mobydick_coun
 head | out/mobydick_count.txt
 
 # test that hadoop worked
-cat mobydick.txt | ./mapper.py | sort | ./reducer.py | sort -k 2 -r -n > out/mobydick_count_local.txt
 diff  out/mobydick_count.txt out/mobydick_count_local.txt
 
 # cleanup
 hadoop fs -rmr count_example
-cd ..
-rm -r count_example
 
 
