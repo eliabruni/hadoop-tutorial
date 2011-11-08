@@ -6,7 +6,7 @@ cd cooccur
 mkdir out
 
 # run it locally
-cat mobydick.txt | ./mapper.py | ./reducer.py > out/mobydick_cooccur_local.txt
+cat mobydick.txt | ./mapper.py | sort | ./reducer.py > out/mobydick_cooccur_local.txt
 
 # put the data in hdfs
 hadoop fs -mkdir cooccur_example

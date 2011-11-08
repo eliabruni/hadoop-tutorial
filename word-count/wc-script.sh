@@ -5,7 +5,7 @@ cd word-count
 mkdir out
 
 # run it locally
-cat mobydick.txt | ./mapper.py | ./reducer.py | sort -nrk 2 > out/mobydick_count_local.txt
+cat mobydick.txt | ./mapper.py | sort | ./reducer.py | sort -nrk 2 > out/mobydick_count_local.txt
 
 # put the data in hdfs
 hadoop fs -mkdir count_example
